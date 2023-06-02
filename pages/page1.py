@@ -29,16 +29,20 @@ layout = dbc.Container([
 @callback(
     Output('vehicle-graph', 'figure'),
     Output('vehicle-graph-line', 'figure'),
-    Input('radioitems-input', 'value')
+    Input('radioitems-input', 'value'),
+    Input('input1', 'value'),
+    Input('input2', 'value')
 )
-def update_graph(selected_quarter):
+def update_graph(selected_quarter, input1, input2):
+    start_year, end_year = input1, input2
+    filtered_df = df[(df['Year'] >= start_year) & (df['Year'] <= end_year)]
     traces = []
     colors = ['rgba(0, 0, 255, 0.5)', 'rgba(255, 0, 0, 0.5)', 'rgba(0, 255, 0, 0.5)', 'rgba(0, 255, 255, 0.5)']
     quarters = ['Q1', 'Q2', 'Q3', 'Q4']
 
     if selected_quarter == 5:
         for quarter in range(1, selected_quarter):
-            quarter_data = df[df['Quarter'] == quarter]
+            quarter_data = filtered_df[filtered_df['Quarter'] == quarter]
             trace = go.Bar(
                 x=quarter_data['Year'],
                 y=quarter_data['New Vehicles'],
@@ -48,7 +52,7 @@ def update_graph(selected_quarter):
             )
             traces.append(trace)
     else:
-        quarter_data = df[df['Quarter'] == selected_quarter]
+        quarter_data = filtered_df[filtered_df['Quarter'] == selected_quarter]
         trace = go.Bar(
             x=quarter_data['Year'],
             y=quarter_data['New Vehicles'],
@@ -69,13 +73,14 @@ def update_graph(selected_quarter):
     )
 
     if selected_quarter == 5:
-        line = px.line(df, x="Year", y="New Vehicles", color="Quarter")
+        line = px.line(filtered_df, x="Year", y="New Vehicles", color="Quarter")
     else:
-        line = px.line(df[df['Quarter'] == selected_quarter], x="Year", y="New Vehicles", color="Quarter")
+        line = px.line(filtered_df[filtered_df['Quarter'] == selected_quarter], x="Year", y="New Vehicles",
+                       color="Quarter")
     line.update_layout(
         title="Tesla New Vehicle Production Line Graph",
         xaxis_title='Year',
         yaxis_title='New Vehicles',
-        legend_title_text='Quarter'
+        legend_title_text='Quarter',
     )
-    return fig, line
+    return line, fig

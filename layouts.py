@@ -71,6 +71,14 @@ def side_bar():
                     value=5,
                     id="radioitems-input",
                 ),
-            ])
+            ]),
+            html.Hr(),
+            html.Div([
+                dbc.Label("Select between Years:"),
+                dbc.InputGroup([
+                    dbc.Input(type="number", min=2011, max=2021, value=2011, step=1, id="input1"),
+                    dbc.Input(type="number", min=2011, max=2021, value=2021, step=1, id="input2")
+                ], id="input")
+            ]),
         ], style=SIDEBAR_STYLE)
     return sidebar
