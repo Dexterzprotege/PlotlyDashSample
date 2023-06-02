@@ -6,7 +6,7 @@ from dash import dcc, html
 
 df = pd.read_csv("assets/tesla_vehicles.csv")
 
-image_path = "assets/tesla-logo.png"
+image_path = "assets/tesla-logo-png-2244.png"
 with open(image_path, "rb") as image_file:
     encoded_image = base64.b64encode(image_file.read()).decode()
 
@@ -16,7 +16,7 @@ SIDEBAR_STYLE = {
     "left": 0,
     "bottom": 0,
     "width": "14rem",
-    "padding": "2rem 1rem",
+    "padding": "3rem 2rem",
     "background-color": "#f8f9fa"
 }
 
@@ -25,13 +25,16 @@ def nav_bar():
     navbar = dbc.Navbar(
         dbc.Container(
             [
-                dbc.Row(
+                html.Div(
                     [
-                        dcc.Link(html.Img(src="data:image/png;base64," + encoded_image, height="30px"), href="/",
-                                 className="nav-link")
+                        dcc.Link(
+                            html.Img(src="data:image/png;base64," + encoded_image, height="20px"),
+                            href="/",
+                            className="nav-link",
+                            style={"float": "left"}
+                        ),
                     ],
-                    align="center",
-                    className="g-0"
+                    className="mr-auto"
                 ),
                 dbc.Nav(
                     [
@@ -43,8 +46,8 @@ def nav_bar():
                 ),
             ],
         ),
-        color="dark",
-        dark=True,
+        color="#F80115",
+        dark=True
     )
 
     return navbar
@@ -53,18 +56,21 @@ def nav_bar():
 def side_bar():
     sidebar = html.Div(
         [
-            html.H4("Sidebar", className="display-9", style={'textAlign': 'center'}),
+            html.H3("Sidebar", className="display-8", style={'textAlign': 'center'}),
             html.Hr(),
-            dbc.Row([
-                dbc.Col(
-                    dcc.RangeSlider(
-                        id='year-range-slider',
-                        min=df['Year'].min(),
-                        max=df['Year'].max(),
-                        marks={str(year): str(year) for year in df['Year'].unique()},
-                        value=[df['Year'].min(), df['Year'].max()],
-                        step=None,
-                    ), style={'transform': 'rotate(270deg)', 'marginTop': '100px', 'width': '100%', 'height': '100%'}
-                )]),
+            html.Div([
+                dbc.Label("Select a Quarter: "),
+                dbc.RadioItems(
+                    options=[
+                        {"label": "Quarter 1", "value": 1},
+                        {"label": "Quarter 2", "value": 2},
+                        {"label": "Quarter 3", "value": 3},
+                        {"label": "Quarter 4", "value": 4},
+                        {"label": "All Quarters", "value": 5},
+                    ],
+                    value=5,
+                    id="radioitems-input",
+                ),
+            ])
         ], style=SIDEBAR_STYLE)
     return sidebar
