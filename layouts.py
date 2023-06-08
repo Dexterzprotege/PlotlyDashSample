@@ -14,8 +14,9 @@ SIDEBAR_STYLE = {
     "position": "relative",
     "top": 0,
     "left": 0,
+    "height": "100%",
     "bottom": 0,
-    "width": "14rem",
+    "width": "20rem",
     "padding": "3rem 2rem",
     "background-color": "#f8f9fa"
 }

@@ -33,12 +33,11 @@ layout = dbc.Container([
     Input('input1', 'value'),
     Input('input2', 'value')
 )
-def update_graph(selected_quarter, input1, input2):
-    start_year, end_year = input1, input2
+def update_graph(selected_quarter, start_year, end_year):
     filtered_df = df[(df['Year'] >= start_year) & (df['Year'] <= end_year)]
     traces = []
-    colors = ['rgba(0, 0, 255, 0.5)', 'rgba(255, 0, 0, 0.5)', 'rgba(0, 255, 0, 0.5)', 'rgba(0, 255, 255, 0.5)']
     quarters = ['Q1', 'Q2', 'Q3', 'Q4']
+    totals = []
 
     if selected_quarter == 5:
         for quarter in range(1, selected_quarter):
@@ -47,9 +46,9 @@ def update_graph(selected_quarter, input1, input2):
                 x=quarter_data['Year'],
                 y=quarter_data['New Vehicles'],
                 name=quarters[quarter - 1],
-                marker_color=colors[quarter - 1],
                 showlegend=(quarter == 1 or quarter == 2 or quarter == 3 or quarter == 4)
             )
+            totals.append(quarter_data['New Vehicles'])
             traces.append(trace)
     else:
         quarter_data = filtered_df[filtered_df['Quarter'] == selected_quarter]
@@ -57,15 +56,18 @@ def update_graph(selected_quarter, input1, input2):
             x=quarter_data['Year'],
             y=quarter_data['New Vehicles'],
             name=quarters[selected_quarter - 1],
-            marker_color=colors[selected_quarter - 1],
             showlegend=(
                     selected_quarter == 1 or selected_quarter == 2 or selected_quarter == 3 or selected_quarter == 4)
         )
+        totals.append(quarter_data['New Vehicles'])
         traces.append(trace)
 
     fig = go.Figure(data=traces)
     fig.update_layout(
         title='Tesla New Vehicle Production Bar Graph',
+        width=600,
+        height=500,
+        template="simple_white",
         xaxis_title='Year',
         yaxis_title='New Vehicles',
         legend_title_text='Quarter',
@@ -79,6 +81,9 @@ def update_graph(selected_quarter, input1, input2):
                        color="Quarter")
     line.update_layout(
         title="Tesla New Vehicle Production Line Graph",
+        width=600,
+        height=500,
+        template="simple_white",
         xaxis_title='Year',
         yaxis_title='New Vehicles',
         legend_title_text='Quarter',

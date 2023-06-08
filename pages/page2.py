@@ -20,10 +20,11 @@ layout = html.Div([
 
 @callback(
     Output('vehicle-table', 'figure'),
-    Input('year-range-slider', 'value')
+    Input('radioitems-input', 'value'),
+    Input('input1', 'value'),
+    Input('input2', 'value')
 )
-def update_table(selected_years):
-    start_year, end_year = selected_years
+def update_table(selected_quarter, start_year, end_year):
     filtered_df = df[(df['Year'] >= start_year) & (df['Year'] <= end_year)]
     table_trace = go.Table(
         header=dict(values=filtered_df.columns,
